@@ -4,22 +4,15 @@
 {% block content %}
 
 <h1>Sign Up</h1>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            {{message}}
-        {% endfor %}
-    {% endif %}
-{% endwith %}
 
-<form>
+<form action='/register', method='POST'>
     {{form.hidden_tag()}}
 
     {% for field in form if field.widget.input_type != 'hidden' %}
     <p>{{field.label}}
         {{field}}
 
-        {% for error in form.errors %}
+        {% for error in field.errors %}
         {{error}}
         {% endfor %}
     </p>

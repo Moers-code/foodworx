@@ -13,9 +13,9 @@
         <li><a href="/register">Sign up</a></li>
         <li><a href="/login">Log in</a></li>
         {% else %}
-        <li><a href="/users/{{ g.user.id }}"></a></li>
         <li><a href="/users/{{ g.user.id }}/inventory">Inventory</a></li>
         <li><a href="/users/{{ g.user.id }}/recipes">Recipes</a></li>
+        <li><a href="/users/{{ g.user.id }}">{{ g.user.username }}</a></li>
         <li><a href="/logout">Log out</a></li>
         {% endif %}
     </nav>

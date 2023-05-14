@@ -17,16 +17,20 @@ class User(db.Model):
     email = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
 
+
     @classmethod
     def register(cls, first_name, last_name, username, email, password):
         """Registers Users w/ Hashed Password and Returns User"""
-        hashed = bcrypt.generate_password_hash(password)
-        hashed_utf8 = hashed.decode('utf8')
 
-        return cls(first_name = first_name, last_name = last_name, username = username, email = email, password = password)
+        hashed_password = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = User(first_name = first_name, last_name = last_name, username = username, email = email, password = hashed_password)
+        
+        db.session.add(user)
+        return user
 
     @classmethod
-    def autheticate_user(cls, username, password):
+    def authenticate_user(cls, username, password):
         """Authenticates Users and Returns User"""
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
@@ -39,7 +43,7 @@ class Ingredients(db.Model):
     """Ingredients Table"""
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    first_name = db.Column(db.Text, nullable=False)
+    name = db.Column(db.Text, nullable=False)
     expiry_date = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, name, expiry_date):
@@ -52,6 +56,7 @@ class Ingredients(db.Model):
 
     def check_expired_items():
         """Add APScheduler and Socketio to Schedule Daily Check on Inventory Expiry Eates and Notify User"""
+        """Maybe better to place inside pantry"""
         pass
 
 def connect_db(app):

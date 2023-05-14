@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<h1>{{ g.user.first_name }} {{ g.user.last_name }}</h1>
+<h3>{{ g.user.username }}</h3>
+<button onclick="window.location.href='/users/{{g.user.id}}/edit'">Edit User</button>
+
+<div>
+    <h3>Items in Pantry</h3>
+    <p>Number of Items</p>
+</div>
+<div>
+    <h3>Sustainability</h3>
+<div>
+<div>
+    <h3>Items About to Expire:</h3>
+    <p>Number of Items</p>
+</div>
+{% endblock %}

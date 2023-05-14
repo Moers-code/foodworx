@@ -18,3 +18,14 @@ class LoginForm(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+
+
+class EditUserForm(FlaskForm):
+    """Form to Edit User Info"""
+
+    first_name = StringField('First Name', validators=[DataRequired(), Length(min=1, max=50)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=50)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=50)])
+    email = EmailField('Email', validators=[DataRequired(), Email(), Length(min=1, max=50)])
+    password = PasswordField('Old Password', validators=[DataRequired(), Length(min=8, max=50)])
+    new_password = PasswordField('New Password', validators=[DataRequired(), EqualTo('password', message='Passwords Must Match')])
