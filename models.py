@@ -16,7 +16,8 @@ class User(db.Model):
     username = db.Column(db.Text, nullable=False)
     email = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
-
+    recipe = db.relationship('Recipe', backref='user', cascade="all, delete-orphan")
+    pantry = db.relationship('Pantry', backref='user', cascade="all, delete-orphan")
 
     @classmethod
     def register(cls, first_name, last_name, username, email, password):
@@ -42,9 +43,32 @@ class User(db.Model):
 class Ingredients(db.Model):
     """Ingredients Table"""
 
+    __tablename__ = 'ingredients'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable=False)
-    expiry_date = db.Column(db.DateTime, nullable=False)
+    category = db.Column(db.Text)
+    pantry = db.relationship('Pantry', backref='ingredient', cascade="all, delete-orphan")
+    
+    
+
+class Recipe(db.Model):
+    """Favorite Recipes Table"""
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
+
+class Pantry(db.Model):
+    """Pantry Table"""
+
+    __tablename__ = 'pantry'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
+    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id', ondelete='CASCADE'))
+    ingredient_quantity = db.Column(db.Float, nullable=False)
+    expiry_date = db.Column(db.Date, nullable=False)
+    uom = db.Column(db.Text, nullable=False)
 
     def __init__(self, name, expiry_date):
         self.name = name
@@ -62,3 +86,4 @@ class Ingredients(db.Model):
 def connect_db(app):
     db.app = app
     db.init_app(app)
+

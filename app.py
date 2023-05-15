@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, flash, jsonify, session, g
 from flask_debugtoolbar import DebugToolbarExtension
-from forms import LoginForm, SignupForm
+from forms import LoginForm, SignupForm, EditUserForm
 from models import User, db, connect_db
 from flask_migrate import Migrate
 
@@ -11,6 +11,7 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = "H-pful™•¶,it+wo98" 
 
+
 debug = DebugToolbarExtension(app)
 migrate = Migrate(app, db)
 
@@ -19,7 +20,6 @@ CURR_USER_KEY = 'user_id'
 with app.app_context():
     connect_db(app)
     db.create_all()
-
 
 @app.before_request
 def add_user_to_g():
@@ -33,6 +33,7 @@ def add_user_to_g():
 
 def do_login(user):
     """Log User In """
+
     session[CURR_USER_KEY] = user.id
 
 def do_logout():
@@ -89,6 +90,7 @@ def login_users():
         user = User.authenticate_user(username=username, password=password)
 
         if user:
+            
             do_login(user)
             flash(f'Welcome back {user.username}')
             return redirect(f'/users/{user.id}')
@@ -108,7 +110,58 @@ def logout():
 
 @app.route('/users/<int:user_id>')
 def user_profile(user_id):
+    """User Profile"""
 
-    if g.user.id == user_id:
-        
-        return render_template('user/user_profile.html')
+    try:
+        user = User.query.get_or_404(user_id)
+    except:
+        return redirect('/')
+
+    if user != g.user:
+            flash('You are not authorized to edit this profile!')
+            return redirect('/')
+    
+    return render_template('user/user_profile.html')
+
+
+@app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
+def edit_profile(user_id):
+
+    try:
+        user = User.query.get_or_404(user_id)
+    except:
+        return redirect('/')
+    
+    if user != g.user:
+        flash('You are not authorized to edit this profile!')
+        return redirect('/')
+
+    form = EditUserForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate_user(user.username, form.password.data):
+            try:
+                user.first_name = form.first_name.data
+                user.last_name = form.last_name.data
+                user.username = form.username.data
+                user.email = form.email.data
+                db.session.commit()
+                flash('Profile updated successfully!')
+                return redirect(f'/users/{user.id}')
+
+            except Exception as e:
+                return str(e)
+
+        else:
+            db.session.rollback()
+            flash("Wrong username or password")
+            return redirect(f'/users/{g.user.id}')
+
+    else:
+        return render_template('user/edit_user.html', form=form)
+
+@app.route('/users/<int:user_id>', methods=['POST'])
+def delete_user(user_int):
+    """Delete User"""
+
+    
