@@ -160,8 +160,18 @@ def edit_profile(user_id):
     else:
         return render_template('user/edit_user.html', form=form)
 
-@app.route('/users/<int:user_id>', methods=['POST'])
-def delete_user(user_int):
+@app.route('/users/<int:user_id>/delete', methods=['POST'])
+def delete_user(user_id):
     """Delete User"""
 
+    user = User.query.get_or_404(user_id)
+    try:
+        do_logout()
+        db.session.delete(user)
+        db.session.commit()
+        flash('Account deleted successfully')
+        return redirect('/')
+        
+    except Exception as e:
+        return str(e)
     

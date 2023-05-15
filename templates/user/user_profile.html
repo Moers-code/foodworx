@@ -12,7 +12,11 @@
 
 <h1>{{ g.user.first_name }} {{ g.user.last_name }}</h1>
 <h3>{{ g.user.username }}</h3>
+
 <button onclick="window.location.href='/users/{{g.user.id}}/edit'">Edit User</button>
+<form action="/users/{{g.user.id}}/delete", method='POST'>
+    <button>Delete User</button>
+</form>
 
 <div>
     <h3>Items in Pantry</h3>
