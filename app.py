@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, flash, jsonify, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import LoginForm, SignupForm, EditUserForm
-from models import User, db, connect_db
+from models import User, db, connect_db, User, Ingredients, Pantry, Recipe
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -20,6 +20,9 @@ CURR_USER_KEY = 'user_id'
 with app.app_context():
     connect_db(app)
     db.create_all()
+
+####################
+# User endpoints
 
 @app.before_request
 def add_user_to_g():
@@ -42,10 +45,6 @@ def do_logout():
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
-
-@app.route('/')
-def home_page():
-    return render_template('home.html')
 
 @app.route('/register', methods=['GET','POST'])
 def register_user():
@@ -171,7 +170,25 @@ def delete_user(user_id):
         db.session.commit()
         flash('Account deleted successfully')
         return redirect('/')
-        
+
     except Exception as e:
         return str(e)
+
+###################################### 
+ # Misc Pages
+
+@app.route('/')
+def home_page():
+    """Render Home Page"""
     
+    return render_template('home.html')
+
+######################################
+# Ingredients' Endpoints
+
+@app.route('/users/ingredients')
+def show_ingredients():
+
+    ingredients = Ingredients.query.filter_by(user_id=g.user.id).all()
+
+    return render_template('/ingredients/ingredients.html', ingredients=ingredients)

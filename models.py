@@ -18,7 +18,8 @@ class User(db.Model):
     password = db.Column(db.Text, nullable=False)
     recipe = db.relationship('Recipe', backref='user', cascade="all, delete-orphan")
     pantry = db.relationship('Pantry', backref='user', cascade="all, delete-orphan")
-
+    ingredient = db.relationship('Ingredients', backref='user', cascade="all, delete-orphan")
+    
     @classmethod
     def register(cls, first_name, last_name, username, email, password):
         """Registers Users w/ Hashed Password and Returns User"""
@@ -47,6 +48,7 @@ class Ingredients(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable=False)
     category = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     pantry = db.relationship('Pantry', backref='ingredient', cascade="all, delete-orphan")
     
     
