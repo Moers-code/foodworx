@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, flash, jsonify, session, g
 from flask_debugtoolbar import DebugToolbarExtension
-from forms import LoginForm, SignupForm, EditUserForm
+from forms import LoginForm, SignupForm, EditUserForm, IngredientForm
 from models import User, db, connect_db, User, Ingredients, Pantry, Recipe
 from flask_migrate import Migrate
 
@@ -186,9 +186,86 @@ def home_page():
 ######################################
 # Ingredients' Endpoints
 
-@app.route('/users/ingredients')
-def show_ingredients():
+@app.route('/users/<int:user_id>/ingredients')
+def show_ingredients(user_id):
+    """Show List of ingredients the User Added"""
 
     ingredients = Ingredients.query.filter_by(user_id=g.user.id).all()
 
     return render_template('/ingredients/ingredients.html', ingredients=ingredients)
+
+@app.route('/ingredients/<int:ingredient_id>')
+def ingredient_details(ingredient_id):
+    """Show an Ingredient's Details"""
+
+    ingredient = Ingredients.query.get_or_404(ingredient_id)
+
+    return render_template('/ingredients/ingredient_details.html', ingredient=ingredient)
+
+@app.route('/ingredients/<int:ingredient_id>/edit', methods=['GET', 'POST'])
+def edit_ingredient(ingredient_id):
+
+    if not g.user:
+        return redirect('/')
+
+    ingredient = Ingredients.query.get(ingredient_id)
+
+    if not ingredient:
+        flash("The requested ingredient doesn't exist")
+        return redirect(f'/users/{g.user.id}/ingredients')
+
+    form = IngredientForm()
+
+    if form.validate_on_submit():
+        ingredient.name = form.name.data
+        ingredient.category = form.category.data
+
+        try:
+            db.session.commit()
+            flash('Ingredient updated successfully!')
+            return redirect(f'/users/{g.user.id}/ingredients')
+        except:
+            db.session.rollback()
+            flash('Something was wrong')
+    
+    else:
+        return render_template('ingredients/edit_ingredient.html', form=form)
+
+@app.route('/ingredients/add', methods=['GET', 'POST'])
+def add_ingredient():
+
+    if not g.user:
+        return redirect('/')
+
+    form = IngredientForm()
+    if form.validate_on_submit():
+        try:
+            new_ingredient = Ingredients(name=form.name.data, category=form.category.data)
+            g.user.ingredient.append(new_ingredient)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An issue occured: {str(e)}')
+    
+    else:
+        return render_template('ingredients/add_ingredient.html', form=form)
+
+@app.route('/ingredients/<int:ingredient_id>/delete')
+def delete_ingredient(ingredient_id):
+
+    ingredient = Ingredients.query.get(ingredient_id)
+
+    if not ingredient:
+        return redirect(f'/users/{g.user.id}/ingredients')
+    
+    try:
+        db.session.delete(ingredient)
+        db.session.commit()
+        flash(f'{ingredient.name} deleted')
+    
+    except:
+        db.session.rollback()
+        flash(f"Couldn't delete {ingredient.name}")
+        return redirect(f'/users/{g.user.id}/ingredients')
+
+################################################

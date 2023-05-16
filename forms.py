@@ -32,3 +32,10 @@ class EditUserForm(FlaskForm):
 
 class ChangePasswordForm(FlaskForm):
     pass
+
+
+class IngredientForm(FlaskForm):
+    """Form to Edit a New Ingredient"""
+
+    name = StringField('Name', validators=[DataRequired(), Length(min=1, max=50)])
+    category = StringField('Category', validators=[DataRequired(), Length(min=1, max=50)])
