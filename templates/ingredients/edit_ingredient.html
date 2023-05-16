@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Ingredient{% endblock %}
+
+{% block content %}
+<h1>Edit Ingredient</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form action="/ingredients/{{ingredient.id}}/edit", method="POST">
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.widget.input_type != 'hidden' %}
+    <p>
+        {{ field.label }}
+        {{ field }}
+
+        {% for error in field.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
+
+    {% endfor %}
+
+    <button>Save</button>
+</form>
+
+{% endblock %}

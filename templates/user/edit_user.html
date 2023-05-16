@@ -1,9 +1,16 @@
-{% extends 'form_template.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Edit User{% endblock %}
 
 {% block content %}
-
+<h1>Edit User</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
 <form action="/users/{{g.user.id}}/edit", method="POST">
     {{ form.hidden_tag() }}

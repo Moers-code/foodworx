@@ -204,6 +204,7 @@ def ingredient_details(ingredient_id):
 
 @app.route('/ingredients/<int:ingredient_id>/edit', methods=['GET', 'POST'])
 def edit_ingredient(ingredient_id):
+    """Edit Ingredient"""
 
     if not g.user:
         return redirect('/')
@@ -214,7 +215,7 @@ def edit_ingredient(ingredient_id):
         flash("The requested ingredient doesn't exist")
         return redirect(f'/users/{g.user.id}/ingredients')
 
-    form = IngredientForm()
+    form = IngredientForm(obj=ingredient)
 
     if form.validate_on_submit():
         ingredient.name = form.name.data
@@ -229,7 +230,7 @@ def edit_ingredient(ingredient_id):
             flash('Something was wrong')
     
     else:
-        return render_template('ingredients/edit_ingredient.html', form=form)
+        return render_template('ingredients/edit_ingredient.html', form=form, ingredient=ingredient)
 
 @app.route('/ingredients/add', methods=['GET', 'POST'])
 def add_ingredient():

@@ -3,13 +3,30 @@
 {% block title %}Ingredients{% endblock %}
 
 {% block content %}
+<h1>Ingredients</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
-<div>
-    <h3>Ingredient Name: </h3>
-    <p>Category: </p>
-    <button>Edit Ingredient</button>
-    <button>Add New Ingredient</button>
-</div>
+{% if ingredients %}
+    {% for ingredient in ingredients %}
+        <div onclick="window.location.href='/ingredients/<int:ingredient_id'">
+            <h3>Ingredient Name: {{ ingredient.name }}</h3>
+            {% if ingredients.category %}
+            <p>Category: {{ ingredient.category }}</p>
+            {% else %}
+            <p>Category: Not assigned a category yet</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button onclick="window.location.href='/ingredients/add'">Add New Ingredient</button>
 
+{% else %}
+        <h3>You haven't added any ingredients yet</h3>
+{% endif %}
 
 {% endblock %}
