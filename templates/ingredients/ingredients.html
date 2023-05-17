@@ -14,7 +14,7 @@
 
 {% if ingredients %}
     {% for ingredient in ingredients %}
-        <div onclick="window.location.href='/ingredients/<int:ingredient_id'">
+        <div onclick="window.location.href='/ingredients/{{ingredient.id}}'">
             <h3>Ingredient Name: {{ ingredient.name }}</h3>
             {% if ingredients.category %}
             <p>Category: {{ ingredient.category }}</p>

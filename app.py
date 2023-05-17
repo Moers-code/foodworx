@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, flash, jsonify, session, g
 from flask_debugtoolbar import DebugToolbarExtension
-from forms import LoginForm, SignupForm, EditUserForm, IngredientForm
+from forms import LoginForm, SignupForm, EditUserForm, IngredientForm, PantryForm
 from models import User, db, connect_db, User, Ingredients, Pantry, Recipe
 from flask_migrate import Migrate
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///foodworx'
@@ -184,7 +185,7 @@ def home_page():
     return render_template('home.html')
 
 ######################################
-# Ingredients' Endpoints
+# Ingredients Endpoints
 
 @app.route('/users/<int:user_id>/ingredients')
 def show_ingredients(user_id):
@@ -234,6 +235,7 @@ def edit_ingredient(ingredient_id):
 
 @app.route('/ingredients/add', methods=['GET', 'POST'])
 def add_ingredient():
+    """Add Ingredient"""
 
     if not g.user:
         return redirect('/')
@@ -253,6 +255,7 @@ def add_ingredient():
 
 @app.route('/ingredients/<int:ingredient_id>/delete')
 def delete_ingredient(ingredient_id):
+    """Delete Ingredient"""
 
     ingredient = Ingredients.query.get(ingredient_id)
 
@@ -270,3 +273,96 @@ def delete_ingredient(ingredient_id):
         return redirect(f'/users/{g.user.id}/ingredients')
 
 ################################################
+# Pantry Endpoints
+
+@app.route('/users/<int:user_id>/pantryitems')
+def show_pantry(user_id):
+    """Show List of User's Pantry Items"""
+    user = User.query.get(user_id)
+    if user.id != g.user.id:
+        flash('You are not authorized to view this page')
+        return redirect('/')
+
+    pantry = Pantry.query.filter_by(user_id=user_id).all()
+
+    return render_template('pantry_items.html', pantry=pantry)
+
+@app.route('/pantryitems/add', methods=['GET', 'POST'])
+def add_item():
+
+    if not g.user:
+        return redirect('/')
+    
+    form = PantryForm()
+    if form.validate_on_submit():
+        
+        try:
+            ingredient_id=form.ingredient.data
+            quantity=form.quantity.data
+            uom=form.uom.data
+            expiry_date = datetime.strptime(form.expiry_date.data, '%Y-%m-%d')
+            pantry_item = Pantry(user_id=g.user.id, ingredient_id=ingredient_id, ingredient_quantity=quantity, expiry_date=expiry_date, uom=uom)
+            g.user.pantry.append(pantry_item)
+            db.session.commit()
+            flash('Pantry item added successfully.')
+            return redirect(f'/users/{g.user.id}/pantryitems')
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An issue occurred: {str(e)}')
+
+    return render_template('add_item.html', form=form)
+
+@app.route('/pantryitems/<int:item_id>/edit', methods=['GET', 'POST'])
+def edit_item(item_id):
+    """Edit Pantry Item"""
+
+    if not g.user:
+        return redirect('/')
+
+    item = Pantry.query.get(item_id)
+
+    if not item:
+        flash("The requested item doesn't exist")
+        return redirect(f'/users/{g.user.id}/pantryitems')
+
+    form = PantryForm(obj=item)
+
+    if form.validate_on_submit():
+        item.ingredient=form.ingredient.data
+        item.quantity=form.quantity.data
+        item.uom=form.uom.data
+        item.expiry_date = datetime.strptime(form.expiry_date.data, '%Y-%m-%d')
+
+        try:   
+            db.session.commit()
+            flash('Pantry item edited successfully.')
+            return redirect(f'/users/{g.user.id}/pantryitems')
+    
+        except:
+            db.session.rollback()
+            flash('Something was wrong')
+    
+    else:
+        return render_template('pantry/edit_item.html', form=form)
+
+
+@app.route('/pantryitems/<int:item_id>/delete', methods=['POST'])
+def delete_item(item_id):
+    """Delete Pantry Item"""
+
+    item = Pantry.query.get(item_id)
+
+    if not item:
+        return redirect(f'/users/{g.user.id}/pantryitems')
+    
+    try:
+        db.session.delete(item)
+        db.session.commit()
+        flash(f'{item.name} deleted')
+    
+    except:
+        db.session.rollback()
+        flash(f"Couldn't delete {item.name}")
+        return redirect(f'/users/{g.user.id}/ingredients')
+

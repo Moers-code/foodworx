@@ -20,10 +20,10 @@
     {% else %}
     <p>Category: Not assigned a category yet</p>
     {% endif %}
-    <button onclick="window.location.href='/ingredients/<int:ingredient_id>/edit'">Edit Ingredient</button>
+    <button onclick="window.location.href='/ingredients/{{ingredient.id}}/edit'">Edit Ingredient</button>
 </div>
 
-<form action='/ingredients/delete', method="POST">
+<form action='/ingredients/{{ingredient.id}}/delete', method="POST">
     {{ form.hidden_tag() }}
     
     <button>Delete</button>

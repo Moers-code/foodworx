@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Pantry{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% for item in pantry %}
+
+<div onclick="window.location.href='/pantryitems/{{item.id}}'">
+    <h3>Item Name:</h3>
+    <p>Quantity</p>
+    <p>Expiry Date</p>
+</div>
+
+{% endfor %}
+
+<button onclick="window.location.href='/pantryitems/add'">New Item</button>
+{% endblock %}
