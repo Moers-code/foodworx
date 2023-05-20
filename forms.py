@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, PasswordField, SelectField, DateField
+from wtforms import StringField, EmailField, PasswordField, SelectField, DateField, FloatField
 from wtforms.validators import Email, DataRequired, EqualTo, Length
 from models import Ingredients
 from flask import g
@@ -45,8 +45,8 @@ class IngredientForm(FlaskForm):
 class PantryForm(FlaskForm):
     """Form to Add/Edit a New Pantry Item"""
 
-    ingredient = StringField('Ingredient', validators=[DataRequired()])
-    quantity = StringField('Quantity', validators=[DataRequired()])
+    ingredient_name = StringField('Ingredient Name', validators=[DataRequired()])
+    ingredient_quantity = FloatField('Quantity', validators=[DataRequired()])
     expiry_date = DateField('Expiry Date', validators=[DataRequired()])
     uom = SelectField('Unit', choices=[('mg', 'mg'), ('g', 'g'), ('kg', 'kg'), ('ml', 'ml'), ('L', 'L'), ('pc', 'pc')], validators=[DataRequired()])
 

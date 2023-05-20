@@ -281,26 +281,27 @@ def delete_ingredient(ingredient_id):
 @app.route('/users/<int:user_id>/pantryitems')
 def show_pantry(user_id):
     """Show List of User's Pantry Items"""
+
     user = User.query.get(user_id)
     if user.id != g.user.id:
         flash('You are not authorized to view this page')
         return redirect('/')
 
     pantry = Pantry.query.filter_by(user_id=user_id).all()
-    # ingredients = pantry.ingredient_id # Look for indiviual ingredients inside the pantry
+    
     return render_template('pantry/pantry_items.html', pantry=pantry)
 
 @app.route('/pantryitems/add', methods=['GET', 'POST'])
 def add_item():
     """Add New Item to the Pantry"""
 
-    # Need to check if there are ingredients added by the user
-    # and handle it inside the template
-    #need to display items
+    
     if not g.user:
         return redirect('/')
     
     form = PantryForm()
+
+    # if we want to give user the ability to add ingredients from what he added to ingredients
     # form.ingredient.choices = [(int(i.id), i.name) for i in Ingredients.query.filter_by(user_id=g.user.id).all()]
 
     if form.validate_on_submit():
@@ -330,16 +331,16 @@ def edit_item(item_id):
         return redirect('/')
 
     item = Pantry.query.get(item_id)
-
+    
     if not item:
         flash("The requested item doesn't exist")
         return redirect(f'/users/{g.user.id}/pantryitems')
 
     form = PantryForm(obj=item)
-
+    print(item.ingredient_name)
     if form.validate_on_submit():
         item.ingredient_name=form.ingredient.data
-        item.quantity=form.quantity.data
+        item.ingredient_quantity=form.quantity.data
         item.uom=form.uom.data
         item.expiry_date = datetime.strptime(form.expiry_date.data, '%Y-%m-%d')
 
@@ -353,7 +354,7 @@ def edit_item(item_id):
             flash('Something was wrong')
     
     else:
-        return render_template('pantry/edit_item.html', form=form)
+        return render_template('pantry/edit_item.html', form=form, item=item)
 
 
 @app.route('/pantryitems/<int:item_id>/delete', methods=['POST'])
@@ -372,7 +373,7 @@ def delete_item(item_id):
     
     except:
         db.session.rollback()
-        flash(f"Couldn't delete {item.name}")
+        flash(f"Couldn't delete {item.ingredient_name}")
         return redirect(f'/users/{g.user.id}/ingredients')
 
 #####################################################

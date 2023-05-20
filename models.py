@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import date
 from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
@@ -71,7 +71,11 @@ class Pantry(db.Model):
     expiry_date = db.Column(db.Date, nullable=False)
     uom = db.Column(db.Text, nullable=False)
 
-
+    @property
+    def days_left(self):
+        today = date.today()
+        return (self.expiry_date - today).days
+        
     # def is_expired(self):
     #     """Helper function to keep the user aware of expired items in order to remove from pantry and frontend"""
     #     return self.expiry_date < datetime.now()
