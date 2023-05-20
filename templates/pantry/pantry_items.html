@@ -19,7 +19,7 @@
     <p>Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
     <p>Expiry Date: {{ item.expiry_date }}</p>
     <p class='days-left'>Days left: {{ item.days_left }}</p>
-    
+    <button id="{{item.id}}" onclick="window.location.href='/pantryitems/{{item.id}}/recipes'">Find Recipe</button>
     <button onclick="window.location.href='/pantryitems/{{item.id}}/edit'">Edit Item</button>
 
     <form action='/pantryitems/{{item.id}}/delete', method="POST">

@@ -2,8 +2,8 @@
 //event listener that triggers when key up > axios request to server> look in the api_data table if user input is include in the db
 // then return the values
 
-$('#ingredient').keyup(async (e)=> {
-    let userInput = $('#ingredient').val().trim();
+$('#ingredient_name').keyup(async (e)=> {
+    let userInput = $('#ingredient_name').val().trim();
     if (userInput === '') {
         $('#suggestions').empty();
         $('#suggestions-container').removeClass('border-visible');
@@ -37,7 +37,7 @@ const showSuggestions = (results)=> {
 
 $('#suggestions').on('click', 'li', function() {
     let selectedValue = $(this).text();
-    $('#ingredient').val(selectedValue);
+    $('#ingredient_name').val(selectedValue);
     $('#suggestions').empty();
     $('#suggestions-container').removeClass('border-visible');
   });

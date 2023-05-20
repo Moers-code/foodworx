@@ -19,6 +19,11 @@
     <p>
         {{ field.label }}
         {{ field }}
+        {% if field.name == 'ingredient_name' %}
+        <div id="suggestions-container" class='border-hidden'>
+            <ul id='suggestions'></ul>
+        </div>
+            {% endif %}
 
         {% for error in field.errors %}
             {{ error }}

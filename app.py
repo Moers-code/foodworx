@@ -307,11 +307,11 @@ def add_item():
     if form.validate_on_submit():
         
         try:
-            ingredient_name = form.ingredient.data
-            quantity=form.quantity.data
+            ingredient_name = form.ingredient_name.data
+            ingredient_quantity=form.ingredient_quantity.data
             uom=form.uom.data
             expiry_date = form.expiry_date.data
-            pantry_item = Pantry(user_id=g.user.id, ingredient_name=ingredient_name, ingredient_quantity=quantity, expiry_date=expiry_date, uom=uom)
+            pantry_item = Pantry(user_id=g.user.id, ingredient_name=ingredient_name, ingredient_quantity=ingredient_quantity, expiry_date=expiry_date, uom=uom)
             g.user.pantry.append(pantry_item)
             db.session.commit()
             flash('Pantry item added successfully.')
@@ -337,12 +337,12 @@ def edit_item(item_id):
         return redirect(f'/users/{g.user.id}/pantryitems')
 
     form = PantryForm(obj=item)
-    print(item.ingredient_name)
+
     if form.validate_on_submit():
-        item.ingredient_name=form.ingredient.data
-        item.ingredient_quantity=form.quantity.data
+        item.ingredient_name=form.ingredient_name.data
+        item.ingredient_quantity=form.ingredient_quantity.data
         item.uom=form.uom.data
-        item.expiry_date = datetime.strptime(form.expiry_date.data, '%Y-%m-%d')
+        item.expiry_date = form.expiry_date.data
 
         try:   
             db.session.commit()
