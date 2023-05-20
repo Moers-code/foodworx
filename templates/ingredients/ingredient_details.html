@@ -3,7 +3,7 @@
 {% block title %}Ingredients{% endblock %}
 
 {% block content %}
-<h1>Ingredients</h1>
+<h1>{{ ingredient.name }} Details</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -15,7 +15,7 @@
 
 <div>
     <h3>Ingredient Name: {{ ingredient.name }}</h3>
-    {% if ingredients.category %}
+    {% if ingredient.category %}
     <p>Category: {{ ingredient.category }}</p>
     {% else %}
     <p>Category: Not assigned a category yet</p>

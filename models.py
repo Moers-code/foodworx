@@ -49,7 +49,6 @@ class Ingredients(db.Model):
     name = db.Column(db.Text, nullable=False)
     category = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
-    pantry = db.relationship('Pantry', backref='ingredient', cascade="all, delete-orphan")
     
     
 
@@ -67,23 +66,28 @@ class Pantry(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
-    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id', ondelete='CASCADE'))
+    ingredient_name = db.Column(db.Text)
     ingredient_quantity = db.Column(db.Float, nullable=False)
     expiry_date = db.Column(db.Date, nullable=False)
     uom = db.Column(db.Text, nullable=False)
 
-    def __init__(self, name, expiry_date):
-        self.name = name
-        self.expiry_date = expiry_date
 
-    def is_expired(self):
-        """Helper function to keep the user aware of expired items in order to remove from pantry and frontend"""
-        return self.expiry_date < datetime.now()
+    # def is_expired(self):
+    #     """Helper function to keep the user aware of expired items in order to remove from pantry and frontend"""
+    #     return self.expiry_date < datetime.now()
 
-    def check_expired_items():
-        """Add APScheduler and Socketio to Schedule Daily Check on Inventory Expiry Eates and Notify User"""
-        """Maybe better to place inside pantry"""
-        pass
+    # def check_expired_items():
+    #     """Add APScheduler and Socketio to Schedule Daily Check on Inventory Expiry Eates and Notify User"""
+    #     """Maybe better to place inside pantry"""
+    #     pass
+
+class APIDATA(db.Model):
+    """Ingredients Names and ID Downloaded From the API"""
+
+    __tablename__ = 'apidata'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
 
 def connect_db(app):
     db.app = app

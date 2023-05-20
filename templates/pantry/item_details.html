@@ -3,7 +3,7 @@
 {% block title %}Pantry{% endblock %}
 
 {% block content %}
-<h1>Pantry</h1>
+<h1>{{item}}</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}

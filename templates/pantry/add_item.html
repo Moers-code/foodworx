@@ -17,8 +17,15 @@
 
     {% for field in form if field.widget.input_type != 'hidden' %}
     <p>
-        {{ field.label }}
-        {{ field }}
+        
+            {{ field.label }}
+            {{ field }}
+            {% if field.name == 'ingredient' %}
+            <div id="suggestions-container" class='border-hidden'>
+                <ul id='suggestions'></ul>
+            </div>
+            {% endif %}
+        
 
         {% for error in field.errors %}
             {{ error }}

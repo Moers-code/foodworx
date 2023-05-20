@@ -40,16 +40,13 @@ class IngredientForm(FlaskForm):
     """Form to Add/Edit a New Ingredient"""
 
     name = StringField('Name', validators=[DataRequired(), Length(min=1, max=50)])
-    category = StringField('Category', validators=[DataRequired(), Length(min=1, max=50)])
+    category = StringField('Category')
 
 class PantryForm(FlaskForm):
     """Form to Add/Edit a New Pantry Item"""
 
-    ingredient = SelectField('Ingredient', coerce=int, validators=[DataRequired()])
+    ingredient = StringField('Ingredient', validators=[DataRequired()])
     quantity = StringField('Quantity', validators=[DataRequired()])
     expiry_date = DateField('Expiry Date', validators=[DataRequired()])
-    uom = SelectField('Unit', choices=[('mg', 'mg'), ('g', 'g'), ('kg', 'kg'), ('ml', 'ml'), ('L', 'L')], validators=[DataRequired()])
+    uom = SelectField('Unit', choices=[('mg', 'mg'), ('g', 'g'), ('kg', 'kg'), ('ml', 'ml'), ('L', 'L'), ('pc', 'pc')], validators=[DataRequired()])
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.ingredient.choices = [(int(i.id), i.name) for i in Ingredients.query.filter_by(user_id=g.user.id).all()]

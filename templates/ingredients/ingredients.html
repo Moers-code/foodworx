@@ -14,19 +14,18 @@
 
 {% if ingredients %}
     {% for ingredient in ingredients %}
-        <div onclick="window.location.href='/ingredients/{{ingredient.id}}'">
-            <h3>Ingredient Name: {{ ingredient.name }}</h3>
-            {% if ingredients.category %}
+        <div>
+            <h3>Ingredient Name: <a href="/ingredients/{{ingredient.id}}">{{ ingredient.name }}</a></h3>
+            {% if ingredient.category %}
             <p>Category: {{ ingredient.category }}</p>
             {% else %}
             <p>Category: Not assigned a category yet</p>
             {% endif %}
         </div>
     {% endfor %}
-    <button onclick="window.location.href='/ingredients/add'">Add New Ingredient</button>
 
 {% else %}
         <h3>You haven't added any ingredients yet</h3>
 {% endif %}
-
+<button onclick="window.location.href='/ingredients/add'">Add New Ingredient</button>
 {% endblock %}

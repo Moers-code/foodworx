@@ -1,7 +1,7 @@
-from flask import Flask, render_template, redirect, flash, jsonify, session, g
+from flask import Flask, render_template, redirect, flash, jsonify, session, g, request
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import LoginForm, SignupForm, EditUserForm, IngredientForm, PantryForm
-from models import User, db, connect_db, User, Ingredients, Pantry, Recipe
+from models import User, db, connect_db, User, Ingredients, Pantry, Recipe, APIDATA
 from flask_migrate import Migrate
 from datetime import datetime
 
@@ -120,8 +120,8 @@ def user_profile(user_id):
     if user != g.user:
             flash('You are not authorized to edit this profile!')
             return redirect('/')
-    
-    return render_template('user/user_profile.html')
+    form=LoginForm()
+    return render_template('user/user_profile.html', form=form)
 
 
 @app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
@@ -173,7 +173,7 @@ def delete_user(user_id):
         return redirect('/')
 
     except Exception as e:
-        return str(e)
+        return f'Error {str(e)}'
 
 ###################################### 
  # Misc Pages
@@ -200,8 +200,9 @@ def ingredient_details(ingredient_id):
     """Show an Ingredient's Details"""
 
     ingredient = Ingredients.query.get_or_404(ingredient_id)
+    form = IngredientForm()
 
-    return render_template('/ingredients/ingredient_details.html', ingredient=ingredient)
+    return render_template('/ingredients/ingredient_details.html', ingredient=ingredient, form=form)
 
 @app.route('/ingredients/<int:ingredient_id>/edit', methods=['GET', 'POST'])
 def edit_ingredient(ingredient_id):
@@ -246,6 +247,8 @@ def add_ingredient():
             new_ingredient = Ingredients(name=form.name.data, category=form.category.data)
             g.user.ingredient.append(new_ingredient)
             db.session.commit()
+            return redirect(f'/users/{g.user.id}/ingredients')
+
         except Exception as e:
             db.session.rollback()
             flash(f'An issue occured: {str(e)}')
@@ -253,7 +256,7 @@ def add_ingredient():
     else:
         return render_template('ingredients/add_ingredient.html', form=form)
 
-@app.route('/ingredients/<int:ingredient_id>/delete')
+@app.route('/ingredients/<int:ingredient_id>/delete', methods=['POST'])
 def delete_ingredient(ingredient_id):
     """Delete Ingredient"""
 
@@ -266,12 +269,12 @@ def delete_ingredient(ingredient_id):
         db.session.delete(ingredient)
         db.session.commit()
         flash(f'{ingredient.name} deleted')
-    
+        
     except:
         db.session.rollback()
         flash(f"Couldn't delete {ingredient.name}")
-        return redirect(f'/users/{g.user.id}/ingredients')
-
+        
+    return redirect(f'/users/{g.user.id}/ingredients')
 ################################################
 # Pantry Endpoints
 
@@ -284,24 +287,30 @@ def show_pantry(user_id):
         return redirect('/')
 
     pantry = Pantry.query.filter_by(user_id=user_id).all()
-
-    return render_template('pantry_items.html', pantry=pantry)
+    # ingredients = pantry.ingredient_id # Look for indiviual ingredients inside the pantry
+    return render_template('pantry/pantry_items.html', pantry=pantry)
 
 @app.route('/pantryitems/add', methods=['GET', 'POST'])
 def add_item():
+    """Add New Item to the Pantry"""
 
+    # Need to check if there are ingredients added by the user
+    # and handle it inside the template
+    #need to display items
     if not g.user:
         return redirect('/')
     
     form = PantryForm()
+    # form.ingredient.choices = [(int(i.id), i.name) for i in Ingredients.query.filter_by(user_id=g.user.id).all()]
+
     if form.validate_on_submit():
         
         try:
-            ingredient_id=form.ingredient.data
+            ingredient_name = form.ingredient.data
             quantity=form.quantity.data
             uom=form.uom.data
-            expiry_date = datetime.strptime(form.expiry_date.data, '%Y-%m-%d')
-            pantry_item = Pantry(user_id=g.user.id, ingredient_id=ingredient_id, ingredient_quantity=quantity, expiry_date=expiry_date, uom=uom)
+            expiry_date = form.expiry_date.data
+            pantry_item = Pantry(user_id=g.user.id, ingredient_name=ingredient_name, ingredient_quantity=quantity, expiry_date=expiry_date, uom=uom)
             g.user.pantry.append(pantry_item)
             db.session.commit()
             flash('Pantry item added successfully.')
@@ -309,9 +318,9 @@ def add_item():
 
         except Exception as e:
             db.session.rollback()
-            flash(f'An issue occurred: {str(e)}')
+            flash(f'An issue occurred: line 321 {str(e)}')
 
-    return render_template('add_item.html', form=form)
+    return render_template('pantry/add_item.html', form=form)
 
 @app.route('/pantryitems/<int:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
@@ -329,7 +338,7 @@ def edit_item(item_id):
     form = PantryForm(obj=item)
 
     if form.validate_on_submit():
-        item.ingredient=form.ingredient.data
+        item.ingredient_name=form.ingredient.data
         item.quantity=form.quantity.data
         item.uom=form.uom.data
         item.expiry_date = datetime.strptime(form.expiry_date.data, '%Y-%m-%d')
@@ -366,3 +375,18 @@ def delete_item(item_id):
         flash(f"Couldn't delete {item.name}")
         return redirect(f'/users/{g.user.id}/ingredients')
 
+#####################################################
+# Axios requests' endpoints
+
+@app.route('/search')
+def get_suggestions():
+    """A View that Handles the Search Bar Input and Sends Back Suggestions"""
+
+    user_input = request.args.get('userInput')
+    response = []
+    ingredients = APIDATA.query.all()
+    for ingredient in ingredients:
+        if user_input in ingredient.name:
+            response.append({'id':ingredient.id, 'name':ingredient.name})
+    
+    return jsonify({'response':response})

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
@@ -13,12 +14,15 @@
         <li><a href="/register">Sign up</a></li>
         <li><a href="/login">Log in</a></li>
         {% else %}
-        <li><a href="/users/{{ g.user.id }}/inventory">Inventory</a></li>
-        <li><a href="/users/{{ g.user.id }}/recipes">Recipes</a></li>
+        <li><a href="/users/{{ g.user.id }}/ingredients">Ingredients</a></li>
+        <li><a href="/users/{{ g.user.id }}/pantryitems">Pantry</a></li>
         <li><a href="/users/{{ g.user.id }}">{{ g.user.username }}</a></li>
         <li><a href="/logout">Log out</a></li>
         {% endif %}
     </nav>
     {% block content %}{% endblock %}
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <script src="/static/app.js"></script>
 </body>
 </html>
