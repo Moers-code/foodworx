@@ -41,3 +41,29 @@ $('#suggestions').on('click', 'li', function() {
     $('#suggestions').empty();
     $('#suggestions-container').removeClass('border-visible');
   });
+
+const displayRecipe = (data) => {
+    for (let recipe of data){
+        let $recipeDiv = $('<div>');
+        let $img = $('<img>').attr('src', recipe.image).attr('alt', `${recipe.title} recipe`);
+        let $h1 = $('<h1>').text(recipe.title);
+        let $h3 = $('<h3>').text('Ingredients');
+        let $ul = $('<ul>');
+        for (let ingredient of recipe.ingredients){
+            let $li = $('<li>');
+            $li.text(ingredient);
+            $ul.append($li);
+        }
+        $recipeDiv.append($img,$h1, $h3, $ul);
+        $('body').append($recipeDiv);
+    }
+}
+
+$('.api-call-button').on('click', async (e) => {
+    let itemName = $(e.target).attr('id');
+    
+    let res = await axios.post('/fetch-recipes', {'ingredientName':itemName})
+    let data = res.data;
+    
+    displayRecipe(data);
+})

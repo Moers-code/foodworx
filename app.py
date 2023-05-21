@@ -4,14 +4,21 @@ from forms import LoginForm, SignupForm, EditUserForm, IngredientForm, PantryFor
 from models import User, db, connect_db, User, Ingredients, Pantry, Recipe, APIDATA
 from flask_migrate import Migrate
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+import requests
+import re
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///foodworx'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-app.config['SECRET_KEY'] = "H-pful™•¶,it+wo98" 
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+API_KEY = os.getenv('API_KEY')
 
 debug = DebugToolbarExtension(app)
 migrate = Migrate(app, db)
@@ -291,6 +298,16 @@ def show_pantry(user_id):
     
     return render_template('pantry/pantry_items.html', pantry=pantry)
 
+@app.route('/pantryitems/<int:item_id>')
+def item_details(item_id):
+    """Show Ingredient Details"""
+
+    item = Pantry.query.get_or_404(item_id)
+    if not item:
+        return redirect('users/{g.user.id}/pantryitems')
+
+    return render_template('pantry/item_details.html', item=item)
+
 @app.route('/pantryitems/add', methods=['GET', 'POST'])
 def add_item():
     """Add New Item to the Pantry"""
@@ -389,5 +406,34 @@ def get_suggestions():
     for ingredient in ingredients:
         if user_input in ingredient.name:
             response.append({'id':ingredient.id, 'name':ingredient.name})
-    
+
     return jsonify({'response':response})
+
+@app.route('/fetch-recipes', methods=['POST'])
+def fetch_recipes():
+    """API Request to Fetch Recipes"""
+
+    ingredient_name = request.json.get('ingredientName')
+    ingredient_name = re.sub(r'\s', '_', ingredient_name)
+
+    res = requests.get(f'https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredient_name}&number=4&apiKey={API_KEY}')
+    recipes = res.json()
+  
+    response_data = []
+
+    for recipe in recipes:
+        recipe_data = {
+            'title': recipe['title'],
+            'image': recipe['image'],
+        'ingredients': []
+        }
+
+        for ingredient in recipe['usedIngredients']:
+            recipe_data['ingredients'].append(ingredient['original'])
+        
+        for ingredient in recipe['missedIngredients']:
+            recipe_data['ingredients'].append(ingredient['original'])
+        response_data.append(recipe_data)
+
+    return jsonify(response_data)
+
