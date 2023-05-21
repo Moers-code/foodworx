@@ -127,8 +127,10 @@ def user_profile(user_id):
     if user != g.user:
             flash('You are not authorized to edit this profile!')
             return redirect('/')
+
     form=LoginForm()
-    return render_template('user/user_profile.html', form=form)
+    pantry_items = Pantry.query.filter_by(user_id=user.id).all()
+    return render_template('user/user_profile.html', form=form, pantry_items=pantry_items)
 
 
 @app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
@@ -416,7 +418,7 @@ def fetch_recipes():
     ingredient_name = request.json.get('ingredientName')
     ingredient_name = re.sub(r'\s', '_', ingredient_name)
 
-    res = requests.get(f'https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredient_name}&number=4&apiKey={API_KEY}')
+    res = requests.get(f'https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredient_name}&number=6&apiKey={API_KEY}')
     recipes = res.json()
   
     response_data = []

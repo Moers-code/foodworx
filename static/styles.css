@@ -1,3 +1,45 @@
+*{
+    margin: 0;
+}
+/* Lime Green (#6ABD6D)
+Bright Yellow (#FDFD00)
+Teal (#00AA8E)
+Pale Green (#D6F5E0)
+Deep Green (#194A2B) */
+
+body{
+    background-color: #e1f6e8
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #194A2B;
+    margin: 0;
+    height: 13vh;
+    padding-left: 40px;
+    color: rgb(224, 195, 156);
+    font-size: 25px;
+}
+
+.navlinks{
+    margin-right: 30px;
+    width: 50vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 20px;
+    
+}
+
+a{
+    color: rgb(224, 195, 156);
+    font-size: 22px;
+    text-decoration: none;
+}
+
 #suggestions-container{
     max-height: 100px;
     overflow-y: auto;
@@ -6,8 +48,13 @@
     margin-top: -10px;
 }
 
-#suggestions{
+li{
     list-style-type: none;
+}
+
+
+
+#suggestions{
     margin: 0px;
     padding-top: 5px;
     padding-left: 10px;
@@ -21,4 +68,14 @@
 .border-visible{
     border: 1px solid burlywood;
     border-radius: 5px;
+}
+
+.near-expiry{
+    color: red;
+    font-weight: 600;
+}
+
+.expired{
+    color: red;
+    text-decoration: line-through;
 }

@@ -9,16 +9,18 @@
 </head>
 <body>
     <nav>
-        <h4>FoodWorx</h4>
-        {% if not g.user %}
-        <li><a href="/register">Sign up</a></li>
-        <li><a href="/login">Log in</a></li>
-        {% else %}
-        <li><a href="/users/{{ g.user.id }}/ingredients">Ingredients</a></li>
-        <li><a href="/users/{{ g.user.id }}/pantryitems">Pantry</a></li>
-        <li><a href="/users/{{ g.user.id }}">{{ g.user.username }}</a></li>
-        <li><a href="/logout">Log out</a></li>
-        {% endif %}
+        <h1>FoodWorx</h1>
+        <div class="navlinks">
+            {% if not g.user %}
+            <li><a href="/register">Sign up</a></li>
+            <li><a href="/login">Log in</a></li>
+            {% else %}
+            <li><a href="/">Home</a></li>
+            <li><a href="/users/{{ g.user.id }}/pantryitems">Pantry</a></li>
+            <li><a href="/users/{{ g.user.id }}">{{ g.user.username }}</a></li>
+            <li><a href="/logout">Log out</a></li>
+            {% endif %}
+        </div>
     </nav>
     {% block content %}{% endblock %}
     <script src="https://unpkg.com/jquery"></script>

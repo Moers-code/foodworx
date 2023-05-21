@@ -46,7 +46,7 @@ const displayRecipe = (data) => {
     for (let recipe of data){
         let $recipeDiv = $('<div>');
         let $img = $('<img>').attr('src', recipe.image).attr('alt', `${recipe.title} recipe`);
-        let $h1 = $('<h1>').text(recipe.title);
+        let $h2 = $('<h2>').text(recipe.title);
         let $h3 = $('<h3>').text('Ingredients');
         let $ul = $('<ul>');
         for (let ingredient of recipe.ingredients){
@@ -54,7 +54,7 @@ const displayRecipe = (data) => {
             $li.text(ingredient);
             $ul.append($li);
         }
-        $recipeDiv.append($img,$h1, $h3, $ul);
+        $recipeDiv.append($img,$h2, $h3, $ul);
         $('body').append($recipeDiv);
     }
 }

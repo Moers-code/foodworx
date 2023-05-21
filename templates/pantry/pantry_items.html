@@ -18,7 +18,14 @@
     <h3 onclick="window.location.href='/pantryitems/{{item.id}}'">Item Name: {{ item.ingredient_name }}</h3>
     <p>Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
     <p>Expiry Date: {{ item.expiry_date }}</p>
+    {% if item.days_left == 1 %}
+    <p class='near-expiry'>Days left: {{ item.days_left }}</p>
+    {% elif item.days_left < 0 %}
+    <p class='expired'>Days left: EXPIRED</p>
+    {% else %}
     <p class='days-left'>Days left: {{ item.days_left }}</p>
+    {% endif %}
+    
     
     <button onclick="window.location.href='/pantryitems/{{item.id}}/edit'">Edit Item</button>
 

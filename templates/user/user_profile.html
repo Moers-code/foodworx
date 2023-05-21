@@ -22,13 +22,16 @@
 
 <div>
     <h3>Items in Pantry</h3>
-    <p>Number of Items</p>
+    <p>{{ pantry_items | length }}</p>
 </div>
-<div>
-    <h3>Sustainability</h3>
-<div>
+
 <div>
     <h3>Items About to Expire:</h3>
-    <p>Number of Items</p>
+    {% for item in pantry_items %}
+        {% if item.days_left < 3 %}
+            <p>{{ item.ingredient_name }}: {{ item.days_left }} days</p>
+        {% endif %}
+    {% endfor %}
+    
 </div>
 {% endblock %}
