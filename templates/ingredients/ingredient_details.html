@@ -3,7 +3,7 @@
 {% block title %}Ingredients{% endblock %}
 
 {% block content %}
-<h1>{{ ingredient.name }} Details</h1>
+<h1 class="title">{{ ingredient.name }} Details</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -13,20 +13,20 @@
 {% endwith %}
 
 
-<div>
+<div class="details-div">
     <h3>Ingredient Name: {{ ingredient.name }}</h3>
     {% if ingredient.category %}
     <p>Category: {{ ingredient.category }}</p>
     {% else %}
     <p>Category: Not assigned a category yet</p>
     {% endif %}
-    <button onclick="window.location.href='/ingredients/{{ingredient.id}}/edit'">Edit Ingredient</button>
+    <button class="btn" onclick="window.location.href='/ingredients/{{ingredient.id}}/edit'">Edit Ingredient</button>
 </div>
 
 <form action='/ingredients/{{ingredient.id}}/delete', method="POST">
     {{ form.hidden_tag() }}
     
-    <button>Delete</button>
+    <button class="btn" >Delete</button>
 </form>
 
 

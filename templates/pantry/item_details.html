@@ -3,7 +3,7 @@
 {% block title %}Item Details{% endblock %}
 
 {% block content %}
-<h1>{{ item.ingredient_name }} Details</h1>
+<h1 class="title">{{ item.ingredient_name }} Details</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -13,20 +13,20 @@
 {% endwith %}
 
 
-<div>
-    <h3>Ingredient Name: {{ item.ingredient_name }}</h3>
+<div class="details-div">
+    <h3>{{ item.ingredient_name }}</h3>
     
-    <p>Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
+    <p class="details">Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
     
-    <p>Expiry Date: {{ item.expiry_date }}</p>
+    <p class="details">Expiry Date: {{ item.expiry_date }}</p>
 
-    <button onclick="window.location.href='/users/{{g.user.id}}/pantryitems'">Back</button>
+    <button class="btn" onclick="window.location.href='/users/{{g.user.id}}/pantryitems'">Back</button>
 </div>
-<button class="api-call-button" id="{{item.ingredient_name}}">Find Recipe</button>
+<button class="api-call-button btn" id="{{item.ingredient_name}}">Find Recipe</button>
 
 <form action='/pantryitems/{{item.id}}/delete', method="POST">
 
-    <button>Delete</button>
+    <button class="btn">Delete</button>
 </form>
 
 

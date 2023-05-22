@@ -1,5 +1,8 @@
 *{
     margin: 0;
+    --primary-color:#EFEFEF;
+    --secondary-color:#163929;
+    --title-color:#e0ca9a;
 }
 /* Lime Green (#6ABD6D)
 Bright Yellow (#FDFD00)
@@ -8,19 +11,21 @@ Pale Green (#D6F5E0)
 Deep Green (#194A2B) */
 
 body{
-    background-color: #e1f6e8
+    background-color: var(--primary-color);
 }
-
+.title{
+    color: var(--secondary-color);
+}
 nav{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: #194A2B;
+    background-color: var(--secondary-color);
     margin: 0;
     height: 13vh;
     padding-left: 40px;
-    color: rgb(224, 195, 156);
+    color: var(--title-color);
     font-size: 25px;
 }
 
@@ -31,14 +36,43 @@ nav{
     flex-direction: row;
     justify-content: space-between;
     padding-right: 20px;
-    
+    color: var(--title-color);
+}
+
+a:hover{
+    color: rgb(221, 176, 117);
+    text-decoration: underline;
 }
 
 a{
-    color: rgb(224, 195, 156);
+    color: var(--title-color);
     font-size: 22px;
     text-decoration: none;
 }
+
+.app-body{
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid rgb(50, 49, 49);
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: left;
+    
+}
+
+.details-div, .title, .action-buttons{
+    margin-bottom: 20px;
+}
+
+.user-details-div{
+    color: var(--letters-color);
+    border: 1px solid var(--title-color);
+    margin-bottom: 10px;
+    width: 300px;
+    padding: 20px;
+}
+
 
 #suggestions-container{
     max-height: 100px;
@@ -79,3 +113,15 @@ li{
     color: red;
     text-decoration: line-through;
 }
+
+.details{
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.btn{
+    border-radius: 8px ;
+    height: 25px;
+    width: 100px;
+}
+

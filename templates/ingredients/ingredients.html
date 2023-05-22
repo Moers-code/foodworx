@@ -3,7 +3,7 @@
 {% block title %}Ingredients{% endblock %}
 
 {% block content %}
-<h1>Ingredients</h1>
+<h1 class="title">Ingredients</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -14,12 +14,12 @@
 
 {% if ingredients %}
     {% for ingredient in ingredients %}
-        <div>
+        <div class="details-div">
             <h3>Ingredient Name: <a href="/ingredients/{{ingredient.id}}">{{ ingredient.name }}</a></h3>
             {% if ingredient.category %}
-            <p>Category: {{ ingredient.category }}</p>
+            <p class="details">Category: {{ ingredient.category }}</p>
             {% else %}
-            <p>Category: Not assigned a category yet</p>
+            <p class="details">Category: Not assigned a category yet</p>
             {% endif %}
         </div>
     {% endfor %}
@@ -27,5 +27,5 @@
 {% else %}
         <h3>You haven't added any ingredients yet</h3>
 {% endif %}
-<button onclick="window.location.href='/ingredients/add'">Add New Ingredient</button>
+<button class="btn" onclick="window.location.href='/ingredients/add'">Add New Ingredient</button>
 {% endblock %}

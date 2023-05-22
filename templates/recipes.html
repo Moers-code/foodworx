@@ -6,8 +6,8 @@
 {% for recipe in response_data %}
 <div>
     <img src="{{ recipe.image }}" alt="{{ recipe.title }} recipe">
-    <h1>{{ recipe.title }}</h1>
-    <h3>Ingredients</h3>
+    <h1 class="title">{{ recipe.title }}</h1>
+    <h3 class="title">Ingredients</h3>
     <ul>
         {% for ingredient in recipe.ingredients %}
         <li>{{ ingredient }}</li>

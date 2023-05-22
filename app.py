@@ -384,16 +384,16 @@ def delete_item(item_id):
 
     if not item:
         return redirect(f'/users/{g.user.id}/pantryitems')
-    
-    try:
-        db.session.delete(item)
-        db.session.commit()
-        flash(f'{item.name} deleted')
-    
-    except:
-        db.session.rollback()
-        flash(f"Couldn't delete {item.ingredient_name}")
-        return redirect(f'/users/{g.user.id}/ingredients')
+    else:
+        try:
+            db.session.delete(item)
+            db.session.commit()
+            flash(f'{item.ingredient_name} deleted')
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Couldn't delete {item.ingredient_name}: {str(e)}")
+        return redirect(f'/users/{g.user.id}/pantryitems')
 
 #####################################################
 # Axios requests' endpoints

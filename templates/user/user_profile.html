@@ -10,28 +10,36 @@
     {% endif %}
 {% endwith %}
 
-<h1>{{ g.user.first_name }} {{ g.user.last_name }}</h1>
-<h3>{{ g.user.username }}</h3>
+<main class="app-body">
+    <h1 class="title">{{ g.user.username }}</h1>
+    <div class="action-buttons">
+        <button class="btn" onclick="window.location.href='/users/{{g.user.id}}/edit'">Edit User</button>
+        <form action="/users/{{g.user.id}}/delete", method='POST'>
+            {{ form.hidden_tag() }}
+            
+            <button class="btn">Delete User</button>
+        </form>
+    </div>
 
-<button onclick="window.location.href='/users/{{g.user.id}}/edit'">Edit User</button>
-<form action="/users/{{g.user.id}}/delete", method='POST'>
-    {{ form.hidden_tag() }}
-    
-    <button>Delete User</button>
-</form>
 
-<div>
-    <h3>Items in Pantry</h3>
-    <p>{{ pantry_items | length }}</p>
-</div>
+    <div class="user-details-div">
+        <h2>Items in Pantry: {{ pantry_items | length }}</h2>
+    </div>
 
-<div>
-    <h3>Items About to Expire:</h3>
-    {% for item in pantry_items %}
-        {% if item.days_left < 3 %}
-            <p>{{ item.ingredient_name }}: {{ item.days_left }} days</p>
+    <div class="user-details-div">
+        <h2 class="details-title">Items About to Expire:</h2>
+        {% for item in pantry_items %}
+        {% if item.days_left == 1 %}
+        <p class="near-expiry details">{{ item.ingredient_name }}: {{ item.days_left }} day remaining</p>
+        {% elif item.days_left < 1 %}
+        <p class='expired details'>{{ item.ingredient_name }}: EXPIRED</p>
+        {% else %}
+        <p class='days-left details'>{{ item.ingredient_name }}: {{ item.days_left }} remaining</p>
         {% endif %}
-    {% endfor %}
-    
-</div>
+            
+        {% endfor %}
+        
+    </div>
+</main>
+
 {% endblock %}
