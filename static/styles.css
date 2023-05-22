@@ -4,17 +4,13 @@
     --secondary-color:#163929;
     --title-color:#e0ca9a;
 }
-/* Lime Green (#6ABD6D)
-Bright Yellow (#FDFD00)
-Teal (#00AA8E)
-Pale Green (#D6F5E0)
-Deep Green (#194A2B) */
 
 body{
     background-color: var(--primary-color);
 }
 .title{
     color: var(--secondary-color);
+    margin-top: 10px;
 }
 nav{
     display: flex;
@@ -39,40 +35,79 @@ nav{
     color: var(--title-color);
 }
 
-a:hover{
+navs:hover{
     color: rgb(221, 176, 117);
-    text-decoration: underline;
 }
 
-a{
+.navs{
     color: var(--title-color);
     font-size: 22px;
+}
+a{
     text-decoration: none;
+    color: inherit;
+}
+
+a:hover{
+    text-decoration: underline;
 }
 
 .app-body{
     margin: 20px;
     padding: 20px;
-    border: 1px solid rgb(50, 49, 49);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content:center;
-    align-items: left;
-    
+    gap: 50px;
+}
+
+.user-info-left, .user-info-right{
+    height: 70vh;
+    width: 30vw;
+    border: 2px solid var(--title-color);
+    padding: 30px;
+    background-color: #f2efe7;
 }
 
 .details-div, .title, .action-buttons{
     margin-bottom: 20px;
 }
 
+.action-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100px;
+    margin-top: 10px;
+}
+
+.edit:hover{
+    color: white;
+    background-color: blue;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.delete:hover{
+    color: white;
+    background-color: rgb(212, 1, 1);
+    font-weight: 700;
+    cursor: pointer;
+}
+
 .user-details-div{
     color: var(--letters-color);
-    border: 1px solid var(--title-color);
     margin-bottom: 10px;
     width: 300px;
     padding: 20px;
 }
 
+.user-console{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
 
 #suggestions-container{
     max-height: 100px;
@@ -86,6 +121,13 @@ li{
     list-style-type: none;
 }
 
+h3{
+    margin-bottom: 10px;
+}
+
+p{
+    margin-bottom: 20px;
+}
 
 
 #suggestions{
@@ -120,8 +162,11 @@ li{
 }
 
 .btn{
-    border-radius: 8px ;
-    height: 25px;
-    width: 100px;
+    border-radius: 8px;
+    height: 30px;
+    color: var(--secondary-color);
+    width: 40px;
+    border: 2px solid var(--secondary-color);
+    font-size: 18px;
 }
 

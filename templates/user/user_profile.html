@@ -11,35 +11,49 @@
 {% endwith %}
 
 <main class="app-body">
-    <h1 class="title">{{ g.user.username }}</h1>
-    <div class="action-buttons">
-        <button class="btn" onclick="window.location.href='/users/{{g.user.id}}/edit'">Edit User</button>
-        <form action="/users/{{g.user.id}}/delete", method='POST'>
-            {{ form.hidden_tag() }}
-            
-            <button class="btn">Delete User</button>
-        </form>
-    </div>
-
-
-    <div class="user-details-div">
-        <h2>Items in Pantry: {{ pantry_items | length }}</h2>
-    </div>
-
-    <div class="user-details-div">
-        <h2 class="details-title">Items About to Expire:</h2>
-        {% for item in pantry_items %}
-        {% if item.days_left == 1 %}
-        <p class="near-expiry details">{{ item.ingredient_name }}: {{ item.days_left }} day remaining</p>
-        {% elif item.days_left < 1 %}
-        <p class='expired details'>{{ item.ingredient_name }}: EXPIRED</p>
-        {% else %}
-        <p class='days-left details'>{{ item.ingredient_name }}: {{ item.days_left }} remaining</p>
-        {% endif %}
-            
-        {% endfor %}
+    <div class="user-info-left">
+        <div class="user-console">
+            <h1 class="title">Username: {{ g.user.username }}</h1>
+            <div class="action-buttons">
+            <button class="btn edit" onclick="window.location.href='/users/{{g.user.id}}/edit'"><i class="fa-regular fa-pen-to-square"></i></button>
+            <form action="/users/{{g.user.id}}/delete", method='POST'>
+                {{ form.hidden_tag() }}
+                
+                <button class="btn delete"><i class="fa-regular fa-trash-can"></i></button>
+            </form>
+        </div>
+        </div>
+        <h2>First Name</h2>
+        <p>{{ g.user.first_name }}</p>
+        <h2>Last Name</h2>
+        <p>{{ g.user.last_name }}</p>
+        <h2>Registered Email</h2>
+        <p>{{ g.user.email }}</p>
         
     </div>
+    
+
+    <div class="user-info-right">
+        <div class="user-details-div">
+            <h2>Items in Pantry: {{ pantry_items | length }}</h2>
+        </div>
+    
+        <div class="user-details-div">
+            <h2 class="details-title">Items About to Expire:</h2>
+            {% for item in pantry_items %}
+            {% if item.days_left == 1 %}
+            <p class="near-expiry details"> - <a href="/pantryitems/{{item.id}}">{{ item.ingredient_name }}</a>: {{ item.days_left }} day remaining</p>
+            {% elif item.days_left < 1 %}
+            <p class='expired details'> - <a href="/pantryitems/{{item.id}}">{{ item.ingredient_name }}</a>: EXPIRED</p>
+            {% else %}
+            <p class='days-left details'> - <a href="/pantryitems/{{item.id}}">{{ item.ingredient_name }}</a>: {{ item.days_left }} remaining</p>
+            {% endif %}
+                
+            {% endfor %}
+            
+        </div>
+    </div>
+    
 </main>
 
 {% endblock %}

@@ -12,17 +12,18 @@
         <h1>FoodWorx</h1>
         <div class="navlinks">
             {% if not g.user %}
-            <li><a href="/register">Sign up</a></li>
-            <li><a href="/login">Log in</a></li>
+            <li><a class="navs" href="/register">Sign up</a></li>
+            <li><a class="navs" href="/login">Log in</a></li>
             {% else %}
-            <li><a href="/">Home</a></li>
-            <li><a href="/users/{{ g.user.id }}/pantryitems">Pantry</a></li>
-            <li><a href="/users/{{ g.user.id }}">{{ g.user.username }}</a></li>
-            <li><a href="/logout">Log out</a></li>
+            <li><a class="navs" href="/">Home</a></li>
+            <li><a class="navs" href="/users/{{ g.user.id }}/pantryitems">Pantry</a></li>
+            <li><a class="navs" href="/users/{{ g.user.id }}">{{ g.user.username }}</a></li>
+            <li><a class="navs" href="/logout">Log out</a></li>
             {% endif %}
         </div>
     </nav>
     {% block content %}{% endblock %}
+    <script src="https://kit.fontawesome.com/4b279df413.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/jquery"></script>
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
     <script src="/static/app.js"></script>
