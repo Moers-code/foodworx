@@ -3,31 +3,38 @@
 {% block title %}Item Details{% endblock %}
 
 {% block content %}
-<h1 class="title">{{ item.ingredient_name }} Details</h1>
+<div class='pantry-heading'>
+    <button class="btn back" onclick="window.location.href='/users/{{g.user.id}}/pantryitems'"><i class="fa-sharp fa-solid fa-arrow-left"></i></button>
+    <h1 class="title">{{ item.ingredient_name }} Details</h1>
+</div>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
+    <div class="flash-messages">
         {% for message in messages %}
-            {{ message }}
+            <p>{{ message }} </p>
         {% endfor %}
+    </div>
     {% endif %}
 {% endwith %}
 
 
 <div class="details-div">
-    <h3>{{ item.ingredient_name }}</h3>
+    <h3 class="title">{{ item.ingredient_name }}</h3>
     
     <p class="details">Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
     
     <p class="details">Expiry Date: {{ item.expiry_date }}</p>
+    
+    <div class="item-console">
+        <button class="api-call-button btn" id="{{item.ingredient_name}}">Find Recipe</button>
 
-    <button class="btn" onclick="window.location.href='/users/{{g.user.id}}/pantryitems'">Back</button>
+        <form action='/pantryitems/{{item.id}}/delete', method="POST">
+
+            <button class="btn delete"><i class="fa-regular fa-trash-can"></i></button>
+        </form>
+    </div>
 </div>
-<button class="api-call-button btn" id="{{item.ingredient_name}}">Find Recipe</button>
 
-<form action='/pantryitems/{{item.id}}/delete', method="POST">
-
-    <button class="btn">Delete</button>
-</form>
 
 
 {% endblock %}

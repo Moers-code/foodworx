@@ -10,7 +10,8 @@ body{
 }
 .title{
     color: var(--secondary-color);
-    margin-top: 10px;
+    margin-top: 7px;
+    
 }
 nav{
     display: flex;
@@ -73,7 +74,7 @@ a:hover{
 }
 
 .details-div, .title, .action-buttons{
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 .action-buttons{
@@ -89,8 +90,12 @@ a:hover{
     background-color: blue;
     font-weight: 500;
     cursor: pointer;
+    padding-top: 3px;
 }
 
+.delete{
+    padding: 3px;
+}
 .delete:hover{
     color: white;
     background-color: rgb(212, 1, 1);
@@ -99,7 +104,7 @@ a:hover{
 }
 
 .add:hover{
-    color: white;
+    color: var(--title-color);
     background-color: var(--secondary-color);
 }
 
@@ -210,4 +215,68 @@ p{
     justify-content: left;
     gap: 20px;
     margin-left: 35px;
+}
+
+.api-call-button{
+    width: 120px;
+    height: 30px;
+    padding-top: 3px;
+}
+
+.back{
+    margin: 10px;
+    padding-top: 3px;
+}
+
+.back:hover, .api-call-button:hover{
+    background-color: var(--secondary-color);
+    color: var(--title-color);
+}
+
+.item-console{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    gap: 20px;
+    padding-top: 15px;
+}
+
+.pantry-heading{
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+.flash-messages p{
+    margin: 0 auto;
+    color: var(--secondary-color);
+}
+
+.recipe-div{
+    display: flex;
+    flex-direction: row;
+    margin-left: 40px;
+    margin-bottom: 15px;
+    padding: 15px;
+    width: 1300px;
+    border-radius: 10px;
+    border: 2px solid var(--title-color);
+    background-color: #f2efe7;
+    height: 200px;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.recipe-info{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 170px;
+}
+img{
+    width: 200px;
+}
+
+.ingredients-title{
+    margin-left: 40px;
 }

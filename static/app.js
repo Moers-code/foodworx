@@ -44,17 +44,19 @@ $('#suggestions').on('click', 'li', function() {
 
 const displayRecipe = (data) => {
     for (let recipe of data){
-        let $recipeDiv = $('<div>');
+        let $recipeDiv = $('<div>').attr('class', 'recipe-div');
+        let $recipeInfo = $('<div>').attr('class', 'recipe-info');
         let $img = $('<img>').attr('src', recipe.image).attr('alt', `${recipe.title} recipe`);
         let $h2 = $('<h2>').text(recipe.title);
-        let $h3 = $('<h3>').text('Ingredients');
+        let $h3 = $('<h3>').text('Ingredients').attr('class', 'ingredients-title');
         let $ul = $('<ul>');
         for (let ingredient of recipe.ingredients){
             let $li = $('<li>');
             $li.text(ingredient);
             $ul.append($li);
         }
-        $recipeDiv.append($img,$h2, $h3, $ul);
+        $recipeInfo.append($h3, $ul)
+        $recipeDiv.append($img,$h2, $recipeInfo);
         $('body').append($recipeDiv);
     }
 }
