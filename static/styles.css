@@ -35,7 +35,7 @@ nav{
     color: var(--title-color);
 }
 
-navs:hover{
+.navs:hover{
     color: rgb(221, 176, 117);
 }
 
@@ -67,6 +67,9 @@ a:hover{
     border: 2px solid var(--title-color);
     padding: 30px;
     background-color: #f2efe7;
+    border-radius: 15px;
+    overflow: auto;
+    white-space: nowrap;
 }
 
 .details-div, .title, .action-buttons{
@@ -95,6 +98,11 @@ a:hover{
     cursor: pointer;
 }
 
+.add:hover{
+    color: white;
+    background-color: var(--secondary-color);
+}
+
 .user-details-div{
     color: var(--letters-color);
     margin-bottom: 10px;
@@ -116,19 +124,25 @@ a:hover{
     margin-left: 68px;
     margin-top: -10px;
 }
-
+h1{
+    padding: 10px;
+}
 li{
     list-style-type: none;
 }
 
 h3{
-    margin-bottom: 10px;
-}
-
-p{
     margin-bottom: 20px;
 }
 
+p{
+    margin-bottom: 25px;
+}
+
+.item-name{
+    cursor: pointer;
+    color: var(--secondary-color);
+}
 
 #suggestions{
     margin: 0px;
@@ -170,3 +184,30 @@ p{
     font-size: 18px;
 }
 
+.details-div{
+    margin-left: 40px;
+    padding: 15px;
+    width: 200px;
+    border-radius: 10px;
+    border: 2px solid var(--title-color);
+    background-color: #f2efe7;
+    height: 200px;
+}
+
+.pantry-items{
+    display: flex;
+    flex-direction: row;
+    width: 1400px;
+    flex-wrap: wrap;
+    justify-content: left;
+    
+}
+
+.pantry-console{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    gap: 20px;
+    margin-left: 35px;
+}

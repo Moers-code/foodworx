@@ -3,7 +3,11 @@
 {% block title %}Pantry{% endblock %}
 
 {% block content %}
-<h1 class="title">Pantry</h1>
+<div class="pantry-console">
+    <h1 class="title">Pantry</h1>
+    <button class='btn add' onclick="window.location.href='/pantryitems/add'"><i class="fa-solid fa-plus"></i></button>
+</div>
+
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -12,29 +16,34 @@
     {% endif %}
 {% endwith %}
 
-{% for item in pantry %}
+<div class="pantry-items">
+    {% for item in pantry %}
 
-<div class="details-div">
-    <h3 onclick="window.location.href='/pantryitems/{{item.id}}'">{{ item.ingredient_name }}</h3>
-    <p>Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
-    <p>Expiry Date: {{ item.expiry_date }}</p>
-    {% if item.days_left == 1 %}
-    <p class='near-expiry'>Days left: {{ item.days_left }}</p>
-    {% elif item.days_left < 1 %}
-    <p class='expired'>EXPIRED</p>
-    {% else %}
-    <p class='days-left'>Days left: {{ item.days_left }}</p>
-    {% endif %}
-    
-    
-    <button class="btn" onclick="window.location.href='/pantryitems/{{item.id}}/edit'">Edit Item</button>
+    <div class="details-div">
+        <h3 class="item-name" onclick="window.location.href='/pantryitems/{{item.id}}'">{{ item.ingredient_name }}</h3>
+        <p>Quantity: {{ item.ingredient_quantity }} {{ item.uom }}</p>
+        <p>Expiry Date: {{ item.expiry_date }}</p>
+        {% if item.days_left == 1 %}
+        <p class='near-expiry'>Days left: {{ item.days_left }}</p>
+        {% elif item.days_left < 1 %}
+        <p class='expired'>EXPIRED</p>
+        {% else %}
+        <p class='days-left'>Days left: {{ item.days_left }}</p>
+        {% endif %}
+        
+        <div class="user-console">
+            <button class="btn edit" onclick="window.location.href='/pantryitems/{{item.id}}/edit'"><i class="fa-regular fa-pen-to-square"></i></button>
 
-    <form action='/pantryitems/{{item.id}}/delete', method="POST">
-        <button class="btn">Delete</button>
-    </form>
-</div>
+            <form action='/pantryitems/{{item.id}}/delete', method="POST">
+                <button class="btn delete"><i class="fa-regular fa-trash-can"></i></button>
+            </form>
+        </div>
+        
+    </div>
 
 {% endfor %}
+</div>
 
-<button onclick="window.location.href='/pantryitems/add'"><i class="fa-solid fa-plus"></i></button>
+
+<button class='btn add' onclick="window.location.href='/pantryitems/add'"><i class="fa-solid fa-plus"></i></button>
 {% endblock %}
