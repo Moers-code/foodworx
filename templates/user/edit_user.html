@@ -3,7 +3,7 @@
 {% block title %}Edit User{% endblock %}
 
 {% block content %}
-<h1 class="title">Edit User</h1>
+<h1 class="title form-title">Edit User</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -12,13 +12,13 @@
     {% endif %}
 {% endwith %}
 
-<form action="/users/{{g.user.id}}/edit", method="POST">
+<form class="form" action="/users/{{g.user.id}}/edit", method="POST">
     {{ form.hidden_tag() }}
 
     {% for field in form if field.widget.input_type != 'hidden' %}
     <p>
         {{ field.label }}
-        {{ field }}
+        {{ field (class="form-fields")}}
 
         {% for error in field.errors %}
             {{ error }}
@@ -27,7 +27,7 @@
 
     {% endfor %}
 
-    <button>Save</button>
+    <button class="add">Save</button>
 </form>
 
 {% endblock %}

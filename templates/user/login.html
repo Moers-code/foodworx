@@ -17,7 +17,7 @@
 
     {% for field in form if field.widget.input_type != 'hidden' %}
     <p>{{field.label}}
-        {{field}}
+        {{ field (class="form-fields")}}
 
         {% for error in field.errors %}
         {{error}}
@@ -25,7 +25,7 @@
     </p>
     {% endfor %}
 
-    <button>Login</button>
+    <button class="add">Login</button>
 </form>
 <p>Don't have an account yet?<a href='/register'>Sign Up</a></p>
 {% endblock %}

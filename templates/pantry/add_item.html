@@ -12,14 +12,14 @@
     {% endif %}
 {% endwith %}
 
-<form action="/pantryitems/add", method="POST">
+<form class="form" action="/pantryitems/add", method="POST">
     {{ form.hidden_tag() }}
 
     {% for field in form if field.widget.input_type != 'hidden' %}
     <p>
         
             {{ field.label }}
-            {{ field }}
+            {{ field (class="form-fields")}}
             {% if field.name == 'ingredient_name' %}
             <div id="suggestions-container" class='border-hidden'>
                 <ul id='suggestions'></ul>
@@ -34,7 +34,7 @@
 
     {% endfor %}
 
-    <button>Add</button>
+    <button class="add">Add</button>
 </form>
 
 {% endblock %}

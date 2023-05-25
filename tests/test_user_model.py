@@ -1,5 +1,5 @@
 from unittest import TestCase
-from models import User, db, bcrypt
+from models import User, db, bcrypt, connect_db
 from app import app
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_foodworx'
@@ -8,19 +8,18 @@ app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
 app.config['SQLALCHEMY_ECHO'] = False
 
 
-
-
-class TestUser(TestCase):
+class TestUserModel(TestCase):
     """Tests for User Model"""
 
     def setUp(self):
         with app.app_context():
+            db.drop_all()
             db.create_all()
 
     def tearDown(self):
         with app.app_context():
             db.session.remove()
-            db.drop_all()
+
 
     def test_user_registration(self):
         with app.app_context():

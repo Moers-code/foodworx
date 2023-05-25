@@ -12,13 +12,13 @@
     {% endif %}
 {% endwith %}
 
-<form action='/register', method='POST'>
+<form class="form" action='/register', method='POST'>
     {{ form.hidden_tag() }}
 
     {% for field in form if field.widget.input_type != 'hidden' %}
     
     <p>{{ field.label }}
-        {{ field }}
+        {{ field (class="form-fields")}}
 
         {% for error in field.errors %}
         {{ error }}
@@ -27,7 +27,7 @@
 
     {% endfor %}
 
-    <button>Sign Up</button>
+    <button class="add">Sign Up</button>
 </form>
 <p>If you have an account?<a href='/login'>login</a></p>
 {% endblock %}

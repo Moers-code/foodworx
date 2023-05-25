@@ -1,14 +1,15 @@
 from unittest import TestCase
-from models import User, Pantry, db, bcrypt
-from app import app
+from models import User, Pantry, db, bcrypt, connect_db
+import os
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_foodworx'
+os.environ['DATABASE_URL'] = 'postgresql:///test_foodworx'
+
+from app import app
 app.config['TESTING'] = True
 app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
 app.config['SQLALCHEMY_ECHO'] = False
 
-
-
+test_app = app.test_client()
 
 class TestPantry(TestCase):
     """Tests for Pantry Model"""
@@ -17,7 +18,7 @@ class TestPantry(TestCase):
         with app.app_context():
             db.create_all()
             self.user = User.register(first_name='new', last_name='test', username='test user', email='test@test.com', password='password')
-            
+            db.session.commit()
 
     def tearDown(self):
         with app.app_context():
