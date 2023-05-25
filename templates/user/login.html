@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<h1 class="title">Login</h1>
+<h1 class="title form-title">Login</h1>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -12,7 +12,7 @@
     {% endif %}
 {% endwith %}
 
-<form action='/login' method='POST'>
+<form class="form" action='/login' method='POST'>
     {{form.hidden_tag()}}
 
     {% for field in form if field.widget.input_type != 'hidden' %}
@@ -27,5 +27,5 @@
 
     <button class="add">Login</button>
 </form>
-<p>Don't have an account yet?<a href='/register'>Sign Up</a></p>
+<p class="login-note">Don't have an account yet?<a href='/register'>Sign Up</a></p>
 {% endblock %}

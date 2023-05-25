@@ -308,4 +308,19 @@ img{
     border-radius: 5px;
     border: 1px solid var(--title-color);
     margin-left: 10px;
+    color: var(--secondary-color);
+}
+
+.form-title, .login-note{
+    margin: 20px auto;
+    width: 240px;
+    color: var(--secondary-color);
+}
+
+.form-title{
+    padding-left: 100px;
+}
+
+.login-note{
+    font-size: 16px;
 }
