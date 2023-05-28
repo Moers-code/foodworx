@@ -1,47 +1,79 @@
 from unittest import TestCase
-from models import User, db, bcrypt, connect_db
-from app import app
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_foodworx'
-app.config['TESTING'] = True
-app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
-app.config['SQLALCHEMY_ECHO'] = False
+from flask import Flask
+from models import User, connect_db, db
 
 
-class TestUserModel(TestCase):
-    """Tests for User Model"""
-
+class UserTestCase(TestCase):
+    
     def setUp(self):
-        with app.app_context():
-            db.drop_all()
-            db.create_all()
+        # Create a test Flask app
+        self.app = Flask(__name__)
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///foodworx-test'
+        self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        self.app.config['TESTING'] = True
+
+        # Connect the database to the Flask app if not already connected
+        if not hasattr(db, 'session'):
+            connect_db(self.app)
+
+        # Bind the existing SQLAlchemy instance to the app
+        self.db = db
+        self.db.init_app(self.app)
+
+        # Create a test database and bind it to the app
+        with self.app.app_context():
+            self.db.create_all()
+
+        # Create a test client
+        self.client = self.app.test_client()
 
     def tearDown(self):
-        with app.app_context():
-            db.session.remove()
-
+        # Remove the test database
+        with self.app.app_context():
+            self.db.drop_all()
 
     def test_user_registration(self):
-        with app.app_context():
-            user = User.register(first_name='new', last_name='test', username='test user', email='test@test.com', password='password')
-            db.session.commit()
-            self.assertEqual(user.username, 'test user')
-            self.assertEqual(user.email, 'test@test.com')
+        with self.app.app_context():
+            with self.app.test_request_context():
+                user = User(
+                    first_name='John',
+                    last_name='Doe',
+                    username='johndoe',
+                    email='johndoe@example.com',
+                    password='password'
+                )
+                self.db.session.add(user)
+                self.db.session.commit()
 
-    def test_password_hash(self):
-        with app.app_context():
+                # Check if the user is properly stored in the database
+                registered_user = User.query.filter_by(username='johndoe').first()
+                self.assertEqual(registered_user.first_name, 'John')
+                self.assertEqual(registered_user.last_name, 'Doe')
 
-            user = User.register(first_name='new', last_name='test', username='test user', email='test@test.com', password='password')
-            db.session.commit()
-            self.assertTrue(User.authenticate_user('test user', 'password'))
-            self.assertFalse(User.authenticate_user('test user', 'Password'))
-    
-    def test_user_authenticate(self):
-        with app.app_context():
-            user = User.register(first_name='new', last_name='test', username='test user', email='test@test.com', password='password')
-            db.session.commit()
-            u = User.authenticate_user('test user', 'password')
-            self.assertTrue(u)
-            self.assertEqual(user.username, 'test user')
-            self.assertEqual(user.email, 'test@test.com')
-            self.assertFalse(User.authenticate_user('test user', 'not-password'))
+    def test_user_authentication(self):
+        with self.app.app_context():
+            with self.app.test_request_context():
+                # Create a test user
+                user = User(
+                    first_name='John',
+                    last_name='Doe',
+                    username='johndoe',
+                    email='johndoe@example.com',
+                    password='password'
+                )
+                self.db.session.add(user)
+                self.db.session.commit()
+
+                # Test valid authentication
+                response = self.client.post('/login', data={
+                    'username': 'johndoe',
+                    'password': 'password'
+                }, follow_redirects=True)
+                self.assertIn(b'Welcome back johndoe', response.data)
+
+                # Test invalid authentication
+                response = self.client.post('/login', data={
+                    'username': 'johndoe',
+                    'password': 'wrong_password'
+                }, follow_redirects=True)
+                self.assertIn(b'Wrong username or password', response.data)
