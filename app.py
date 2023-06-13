@@ -64,7 +64,7 @@ def register_user():
 
     if user:
         flash(f'{user.username} already exists. Choose another username.')
-        return redirect('/login')
+        
 
     if form.validate_on_submit():
         try:
@@ -73,12 +73,12 @@ def register_user():
 
             db.session.commit()
             do_login(user)
-            flash(f'{user.username} created successfully!')   
+            flash(f'{user.username} created successfully!', category='success')   
             return redirect(f'/users/{user.id}')
 
         except Exception as e:
             db.session.rollback()
-            flash(f"Couldn't create user, {str(e)}", 'error')
+            flash(f"Couldn't create user, {str(e)}", category='error')
             return redirect('/register')
 
         
@@ -99,10 +99,10 @@ def login_users():
         if user:
             
             do_login(user)
-            flash(f'Welcome back {user.username}')
+            flash(f'Welcome back {user.username}', category='success')
             return redirect(f'/users/{user.id}')
         else:
-            flash('Wrong username or password. Please try again.')
+            flash('Wrong username or password. Please try again.', category='error')
             return redirect('/login')
     else:
         return render_template('user/login.html', form=form)
@@ -125,7 +125,7 @@ def user_profile(user_id):
         return redirect('/')
 
     if user != g.user:
-            flash('You are not authorized to edit this profile!')
+            flash('You are not authorized to edit this profile!', category='error')
             return redirect('/')
 
     form=LoginForm()
@@ -142,7 +142,7 @@ def edit_profile(user_id):
         return redirect('/')
     
     if user != g.user:
-        flash('You are not authorized to edit this profile!')
+        flash('You are not authorized to edit this profile!', category='error')
         return redirect('/')
 
     form = EditUserForm(obj=user)
@@ -155,7 +155,7 @@ def edit_profile(user_id):
                 user.username = form.username.data
                 user.email = form.email.data
                 db.session.commit()
-                flash('Profile updated successfully!')
+                flash('Profile updated successfully!', category='success')
                 return redirect(f'/users/{user.id}')
 
             except Exception as e:
@@ -163,7 +163,7 @@ def edit_profile(user_id):
 
         else:
             db.session.rollback()
-            flash("Wrong username or password")
+            flash("Wrong username or password", category='error')
             return redirect(f'/users/{g.user.id}')
 
     else:
@@ -178,7 +178,7 @@ def delete_user(user_id):
         do_logout()
         db.session.delete(user)
         db.session.commit()
-        flash('Account deleted successfully')
+        flash('Account deleted successfully', category='success')
         return redirect('/')
 
     except Exception as e:
@@ -223,7 +223,7 @@ def edit_ingredient(ingredient_id):
     ingredient = Ingredients.query.get(ingredient_id)
 
     if not ingredient:
-        flash("The requested ingredient doesn't exist")
+        flash("The requested ingredient doesn't exist", category='error')
         return redirect(f'/users/{g.user.id}/ingredients')
 
     form = IngredientForm(obj=ingredient)
@@ -234,11 +234,11 @@ def edit_ingredient(ingredient_id):
 
         try:
             db.session.commit()
-            flash('Ingredient updated successfully!')
+            flash('Ingredient updated successfully!', category='success')
             return redirect(f'/users/{g.user.id}/ingredients')
         except:
             db.session.rollback()
-            flash('Something was wrong')
+            flash('Something was wrong', category='error')
     
     else:
         return render_template('ingredients/edit_ingredient.html', form=form, ingredient=ingredient)
@@ -277,11 +277,11 @@ def delete_ingredient(ingredient_id):
     try:
         db.session.delete(ingredient)
         db.session.commit()
-        flash(f'{ingredient.name} deleted')
+        flash(f'{ingredient.name} deleted', category='success')
         
     except:
         db.session.rollback()
-        flash(f"Couldn't delete {ingredient.name}")
+        flash(f"Couldn't delete {ingredient.name}", category='error')
         
     return redirect(f'/users/{g.user.id}/ingredients')
 ################################################
@@ -293,7 +293,7 @@ def show_pantry(user_id):
 
     user = User.query.get(user_id)
     if user.id != g.user.id:
-        flash('You are not authorized to view this page')
+        flash('You are not authorized to view this page', category='error')
         return redirect('/')
 
     pantry = Pantry.query.filter_by(user_id=user_id).all()
@@ -333,12 +333,12 @@ def add_item():
             pantry_item = Pantry(user_id=g.user.id, ingredient_name=ingredient_name, ingredient_quantity=ingredient_quantity, expiry_date=expiry_date, uom=uom)
             g.user.pantry.append(pantry_item)
             db.session.commit()
-            flash('Pantry item added successfully.')
+            flash('Pantry item added successfully.', category='success')
             return redirect(f'/users/{g.user.id}/pantryitems')
 
         except Exception as e:
             db.session.rollback()
-            flash(f'An issue occurred: line 321 {str(e)}')
+            flash(f'An issue occurred: line 321 {str(e)}', category='error')
 
     return render_template('pantry/add_item.html', form=form)
 
@@ -352,7 +352,7 @@ def edit_item(item_id):
     item = Pantry.query.get(item_id)
     
     if not item:
-        flash("The requested item doesn't exist")
+        flash("The requested item doesn't exist", category='error')
         return redirect(f'/users/{g.user.id}/pantryitems')
 
     form = PantryForm(obj=item)
@@ -365,12 +365,12 @@ def edit_item(item_id):
 
         try:   
             db.session.commit()
-            flash('Pantry item edited successfully.')
+            flash('Pantry item edited successfully.', category='success')
             return redirect(f'/users/{g.user.id}/pantryitems')
     
         except:
             db.session.rollback()
-            flash('Something was wrong')
+            flash('Something was wrong', category='error')
     
     else:
         return render_template('pantry/edit_item.html', form=form, item=item)
@@ -388,11 +388,11 @@ def delete_item(item_id):
         try:
             db.session.delete(item)
             db.session.commit()
-            flash(f'{item.ingredient_name} deleted')
+            flash(f'{item.ingredient_name} deleted', category='success')
 
         except Exception as e:
             db.session.rollback()
-            flash(f"Couldn't delete {item.ingredient_name}: {str(e)}")
+            flash(f"Couldn't delete {item.ingredient_name}: {str(e)}", category='error')
         return redirect(f'/users/{g.user.id}/pantryitems')
 
 #####################################################

@@ -324,3 +324,16 @@ img{
 .login-note{
     font-size: 16px;
 }
+
+.flash-messages {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .success {
+    color: green;
+  }
+  
+  .error {
+    color: red;
+  }

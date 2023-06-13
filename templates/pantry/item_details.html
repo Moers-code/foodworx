@@ -7,14 +7,14 @@
     <button class="btn back" onclick="window.location.href='/users/{{g.user.id}}/pantryitems'"><i class="fa-sharp fa-solid fa-arrow-left"></i></button>
     <h1 class="title">{{ item.ingredient_name }} Details</h1>
 </div>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="flash-messages">
-        {% for message in messages %}
-            <p>{{ message }} </p>
-        {% endfor %}
-    </div>
-    {% endif %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 {% endwith %}
 
 
