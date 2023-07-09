@@ -28,7 +28,6 @@ CURR_USER_KEY = 'user_id'
 with app.app_context():
     connect_db(app)
     db.create_all()
-
 ####################
 # User endpoints
 
