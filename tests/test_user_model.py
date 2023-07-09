@@ -2,13 +2,20 @@ from unittest import TestCase
 from flask import Flask
 from models import User, connect_db, db
 
+import os
+from app import app
+
+os.environ['DATABASE_URL'] = 'postgresql:///foodworx-test'
+
+with app.app_context():
+    db.create_all()
 
 class UserTestCase(TestCase):
     
     def setUp(self):
         # Create a test Flask app
         self.app = Flask(__name__)
-        self.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///foodworx-test'
+        
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         self.app.config['TESTING'] = True
 
